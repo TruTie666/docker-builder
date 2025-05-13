@@ -18,15 +18,7 @@ jobs:
         run: |
           echo '
           FROM python:3.12-slim
-
-          WORKDIR /app
-          RUN apt-get update && apt-get install -y git libgl1-mesa-glx libglib2.0-0 && rm -rf /var/lib/apt/lists/*
-
-          RUN git clone https://github.com/exo-explore/exo.git /app
-          WORKDIR /app
-          RUN pip install -e .
-          RUN pip uninstall opencv-python && pip install opencv-python-headless protobuf==5.27.2
-
+          RUN apt-get update && apt-get install -y yamllint && rm -rf /var/lib/apt/lists/*
           CMD ["python"]
           ' > Dockerfile
 
@@ -36,10 +28,10 @@ jobs:
 
       - name: Exportar imagen Docker como .tar.gz
         run: |
-          docker save ${{ github.event.inputs.image_tag }} | gzip > exo_image.tar.gz
+          docker save ${{ github.event.inputs.image_tag }} | gzip > yamllint.tar.gz
 
       - name: Subir artifact (imagen Docker comprimida)
         uses: actions/upload-artifact@v4
         with:
-          name: exo-docker-image
-          path: exo_image.tar.gz
+          name: yamllint
+          path: yamllint.tar.gz
