@@ -23,17 +23,15 @@ jobs:
         id: filename
         run: |
           # Reemplazar caracteres no seguros por guiones
-          SAFE_NAME=${{ github.event.inputs.image_name }} | sed 's/[:\/]/_/g'
-          echo "imagen_segura=$SAFE_NAME" >> $GITHUB_OUTPUT
+          SAFE_NAME=$(echo "${{ github.event.inputs.image_name }}" | sed 's/[:\/]/_/g')
+          echo "filename=${SAFE_NAME}.tar.gz" >> $GITHUB_OUTPUT
 
       - name: Guardar imagen Docker en archivo
         run: |
-          # Utilizar el nombre seguro y agregar extensión de gzip
-          FILE_NAME="${{ steps.filename.outputs.imagen_segura }}.tar.gz"
-          docker save ${{ github.event.inputs.image_name }} | gzip > "$FILE_NAME"
+          docker save ${{ github.event.inputs.image_name }} | gzip > "${{ steps.filename.outputs.filename }}"
 
       - name: Subir imagen como artifact
         uses: actions/upload-artifact@v4
         with:
           name: docker-image
-          path: ${{ steps.filename.outputs.imagen_segura }}.tar.gz
+          path: "${{ steps.filename.outputs.filename }}"
