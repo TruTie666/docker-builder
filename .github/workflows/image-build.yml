@@ -1,4 +1,4 @@
-name: Save Docker Image With Name
+name: Save Docker Image Latest
 
 on:
   workflow_dispatch:
