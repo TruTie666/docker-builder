@@ -1,4 +1,4 @@
-name: Save Docker Image With Name ${{ github.event.inputs.image_name }}
+name: Save Docker Image With Name
 
 on:
   workflow_dispatch:
